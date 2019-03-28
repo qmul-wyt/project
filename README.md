@@ -22,10 +22,12 @@ CREATE TABLE rates.stats (date text PRIMARY KEY,CAD float, USD float, CNY float,
 COPY rates.stats (date,CAD,USD,CNY,EUR) FROM '/home/rates.csv' WITH DELIMITER=',' AND HEADER=TRUE;
 e. Run Cassandra on Kubernetes.
 f. Pull data from our Cassandra database into a flask web client.
-#build our image
-docker build -t gcr.io/${PROJECT_ID}/rates-app:v1 .
+#build the image
+docker build -t gcr.io/${PROJECT_ID}/rates-wyt:v1 .
 #Push it to the Google Repository
-docker push gcr.io/${PROJECT_ID}/rates-app:v1
+docker push gcr.io/${PROJECT_ID}/rates-wyt:v1
 #Run it as a service, exposing the deploment to get an external IP
-kubectl run rates-app --image=gcr.io/${PROJECT_ID}/rates-app:v1 --port 8080
-kubectl expose deployment rates-app --type=LoadBalancer --port 80 --target-port 8080
+kubectl run rates-wyt --image=gcr.io/${PROJECT_ID}/rates-wyt:v1 --port 8080
+kubectl expose deployment rates-wyt --type=LoadBalancer --port 80 --target-port 8080
+#Scale up the application
+kubectl scale deployment rates-wyt --replicas=2
